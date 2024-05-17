@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+<h1>Home</h1>
+{% endblock title %}
+
+{% block content %}
+
+<h3> Welcome </h3>
+<p>
+    The UC Climbing team, established in 2022, is a team dedicated to giving students of all climbing levels the opportunity to compete in USA Climbing Collegiate
+    Competitions. We've sent members to nationals every year since we were founded and hope to continue that legacy.
+</p>
+
+<h3> Join Us! </h3>
+<p>
+    GroupMe QR
+</p>
+<img src="{% static "groupme-QR.png" %}" alt="GroupMe_QR">
+
+<h3> Practice Times </h3>
+<p>
+    We meet at Climb Time Oakley, every Monday and Thursday at 6:00pm <br>
+    Address: 4460 Orkney Ave, Cincinnati, OH 45209
+</p>
+
+<h3> Student Membership Discounts </h3>
+<p>
+    Team members get a discounted rate allowing access to both Climb Time Oakley and Climb Time Blue Ash, discounted rates fluctuate, join the GroupMe to get information
+    on current rates.
+</p>
+{% endblock content %}
