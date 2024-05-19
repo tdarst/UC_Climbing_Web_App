@@ -3,6 +3,11 @@ db.sqlite3
 secrets.txt
 manage.py
 
+# Docker
+.dockerignore
+docker-compose.yml
+Dockerfile
+
 # Django #
 *.log
 *.pot
