@@ -1,7 +1,16 @@
+from __future__ import annotations
 from django.contrib import admin
 from django.contrib.auth.models import UserManager, AbstractBaseUser, PermissionsMixin
 from django.db import models
 from django.utils import timezone
+
+# class Profile(models.Model):
+#     user = models.OneToOneField(User: 'User', null=True, on_delete=models.CASCADE)
+#     username = user.username
+#     first_name = user.first_name
+#     last_name = user.last_name
+    
+    
 
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_stuff):
@@ -33,7 +42,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(blank=True, default='', unique=True)
     first_name = models.CharField(max_length=255, blank=False, null=False)
     last_name = models.CharField(max_length=255, blank=False, null=False)
-    # name = models.CharField(max_length=255, blank=True, default='')
+    # profile = models.OneToOneField(Profile, null=True, on_delete=models.CASCADE)
     
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
@@ -42,7 +51,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     date_joined = models.DateTimeField(default=timezone.now)
     last_login = models.DateTimeField(blank=True, null=True)
     
-    object = CustomUserManager()
+    objects = CustomUserManager()
     
     USERNAME_FIELD = "username"
     EMAIL_FIELD = "email"

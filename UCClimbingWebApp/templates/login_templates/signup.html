@@ -3,4 +3,32 @@
 <h1>Sign Up</h1>
 {% endblock title %}
 {% block content %}
+<form method="post">
+    {% csrf_token %}
+    <div class="col-md-6">
+        <label for="username" class="form-label">Username:</label>
+        {{ form.username }}
+    </div>
+    <div class="col-md-6">
+        <label for="email" class="form-label">Email:</label>
+        {{ form.email }}
+    </div>
+    <div class="col-md-6">
+        <label for="first_name" class="form-label">First name</label>
+        {{ form.first_name }}
+    </div>
+    <div class="col-md-6">
+        <label for="last_name" class="form-label">Last name</label>
+        {{ form.last_name }}
+    </div>
+    <div class="col-md-6">
+        <label for="password1" class="form-label">Password:</label>
+        {{ form.password1 }}
+    </div>
+    <div class="col-md-6">
+        <label for="password2" class="form-label">Re-enter Password:</label>
+        {{ form.password2 }}
+    </div>
+    <button type="submit">Register</button>
+</form>
 {% endblock content %}
