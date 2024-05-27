@@ -5,6 +5,9 @@ manage.py
 docker-compose.yml
 Dockerfile
 
+# Deployment
+scripts
+
 # Django #
 *.log
 *.pot
