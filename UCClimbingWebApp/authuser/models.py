@@ -4,14 +4,6 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.db import models
 from django.utils import timezone
 
-# class Profile(models.Model):
-#     user = models.OneToOneField(User: 'User', null=True, on_delete=models.CASCADE)
-#     username = user.username
-#     first_name = user.first_name
-#     last_name = user.last_name
-    
-    
-
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_stuff):
         if not username:
@@ -42,7 +34,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(blank=True, default='', unique=True)
     first_name = models.CharField(max_length=255, blank=False, null=False)
     last_name = models.CharField(max_length=255, blank=False, null=False)
-    # profile = models.OneToOneField(Profile, null=True, on_delete=models.CASCADE)
     
     is_active = models.BooleanField(default=True)
     is_superuser = models.BooleanField(default=False)
