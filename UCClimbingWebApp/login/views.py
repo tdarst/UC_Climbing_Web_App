@@ -28,7 +28,7 @@ def activate(request, uidb64, token):
         
     return redirect('home')
 
-def activateEmail(request, user, to_email):
+def activate_email(request, user, to_email):
     mail_subject = "Activate your climbing team account"
     message = render_to_string("email/activate_account_template.html", {
         'user': user.username,
@@ -39,27 +39,31 @@ def activateEmail(request, user, to_email):
     })
     email = EmailMessage(mail_subject, message, to=[to_email])
     if email.send():
-        messages.success(request, f"Account creation success! Please check your email for activation link.")
+        messages.success(request, f"Account creation success! Please check {to_email} for activation link.")
         
     else:
-        messages.error(request, "Problem sending email")
+        messages.error(request, f"Problem sending activation email to {to_email}.")
 
 def login_page(request):
-    if request.method == 'POST':
-        form = UserLoginForm(request, data=request.POST)
-        if form.is_valid():
-            user = form.authenticate_user()
-            if user is not None:
-                login(request, user)
-                return redirect('home')
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = UserLoginForm(request, data=request.POST)
+            if form.is_valid():
+                user = form.authenticate_user()
+                if user is not None:
+                    login(request, user)
+                    return redirect('home')
+            else:
+                form.add_error(None,'Invalid username or password.')
+                
+            return render(request, "login_templates/login.html")
+        
         else:
-            form.add_error(None,'Invalid username or password.')
-            
-        return render(request, "login_templates/login.html")
+            form = UserLoginForm()
+        return render(request, "login_templates/login.html", {'form' : form})
     
     else:
-        form = UserLoginForm()
-    return render(request, "login_templates/login.html", {'form' : form})
+        return redirect('home')
 
 def logout_view(request):
     if request.user.is_authenticated:
@@ -67,18 +71,24 @@ def logout_view(request):
     return redirect('home')
 
 def signup(request):
-    if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            activateEmail(request, user, form.cleaned_data.get('email'))
-            return redirect('home')
+    if not request.user.is_authenticated:
+        if request.method == 'POST':
+            form = CustomUserCreationForm(request.POST)
+            if form.is_valid():
+                user = form.save(commit=False)
+                user.is_active = False
+                user.save()
+                activate_email(request, user, form.cleaned_data.get('email'))
+                return redirect('home')
+        else:
+            form = CustomUserCreationForm()
+        return render(request, 'login_templates/signup.html', {'form':form})
     else:
-        form = CustomUserCreationForm()
-    return render(request, 'login_templates/signup.html', {'form':form})
+        return redirect('home')
 
 def profile(request, username):
     user = User.objects.get(username=username)
     return render(request, 'login_templates/profile.html', {'user': user})
+
+def password_change(request, username):
+    return render(request, 'login_templates/password_change.html')

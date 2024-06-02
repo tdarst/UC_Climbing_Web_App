@@ -1,0 +1,11 @@
+<div class='container'>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+                {% include "messages/success_message.html" %}
+            {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+                {% include "messages/error_message.html" %}
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+</div>
