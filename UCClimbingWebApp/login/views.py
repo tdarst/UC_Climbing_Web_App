@@ -57,7 +57,8 @@ def login_page(request):
                     login(request, user)
                     return redirect('home')
             else:
-                form.add_error(None,'Invalid username or password.')
+                error = list(form.errors.values())[0]
+                messages.error(request, error)
                 
             return render(request, "login_templates/login.html", {'form' : form})
         
