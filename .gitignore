@@ -16,12 +16,16 @@ __pycache__
 db.sqlite3
 media
 
+# AWS
+aws_commands.txt
+
 # Backup files # 
 *.bak 
 
 # Python # 
 *.py[cod] 
 *$py.class 
+env
 
 # Installer logs 
 pip-log.txt 

@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth import login, logout
 from django.contrib import messages
 from authuser.models import User
 from .forms import CustomUserCreationForm, UserLoginForm
@@ -10,6 +10,7 @@ from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
 
+# View that is used when email activation link is clicked by user
 def activate(request, uidb64, token):
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
@@ -28,6 +29,7 @@ def activate(request, uidb64, token):
         
     return redirect('home')
 
+# Send the activation email to the user upon successful signup submission
 def activate_email(request, user, to_email):
     mail_subject = "Activate your climbing team account"
     message = render_to_string("email/activate_account_template.html", {
@@ -44,6 +46,7 @@ def activate_email(request, user, to_email):
     else:
         messages.error(request, f"Problem sending activation email to {to_email}.")
 
+# View for user login.
 def login_page(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
@@ -56,7 +59,7 @@ def login_page(request):
             else:
                 form.add_error(None,'Invalid username or password.')
                 
-            return render(request, "login_templates/login.html")
+            return render(request, "login_templates/login.html", {'form' : form})
         
         else:
             form = UserLoginForm()
@@ -65,30 +68,38 @@ def login_page(request):
     else:
         return redirect('home')
 
+# Logic for user logout.
 def logout_view(request):
     if request.user.is_authenticated:
         logout(request)
     return redirect('home')
 
+# View for user signup
 def signup(request):
     if not request.user.is_authenticated:
         if request.method == 'POST':
             form = CustomUserCreationForm(request.POST)
             if form.is_valid():
+                print(f"\\n{form.cleaned_data['username']}\\n")
                 user = form.save(commit=False)
                 user.is_active = False
                 user.save()
                 activate_email(request, user, form.cleaned_data.get('email'))
                 return redirect('home')
+            else:
+                error = list(form.errors.values())[0]
+                messages.error(request, error)
         else:
             form = CustomUserCreationForm()
         return render(request, 'login_templates/signup.html', {'form':form})
     else:
         return redirect('home')
 
+# View for user profile
 def profile(request, username):
     user = User.objects.get(username=username)
     return render(request, 'login_templates/profile.html', {'user': user})
 
+# View for user password change.
 def password_change(request, username):
     return render(request, 'login_templates/password_change.html')

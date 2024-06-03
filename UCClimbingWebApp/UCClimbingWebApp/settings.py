@@ -160,3 +160,10 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     AWS_QUERYSTRING_AUTH = False
 else:
     MEDIA_ROOT = '/UCClimbingWebApp/media/'
+    
+# Auth Settings
+LOGIN_URL = "login/"
+LOGOUT_URL = "logout/"
+
+# Page Settings
+HOME_URL = 'home/'
