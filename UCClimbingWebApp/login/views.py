@@ -9,9 +9,14 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes, force_str
 from django.core.mail import EmailMessage
+from django.conf import settings
 
 # View that is used when email activation link is clicked by user
 def activate(request, uidb64, token):
+    view_msg = {
+        'success': "Account activated! Thank you for your email confirmation.",
+        'error' : "Activation link is invalid or expired."
+    }
     try:
         uid = force_str(urlsafe_base64_decode(uidb64))
         user = User.objects.get(pk=uid)
@@ -22,15 +27,20 @@ def activate(request, uidb64, token):
         user.is_active = True
         user.save()
         
-        messages.success(request, "Account activated! Thank you for your email confirmation.")
+        messages.success(request, view_msg.get('success', settings.MESSAGE_RETRIEVAL_ERROR))
         return redirect('login')
     else:
-        messages.error(request, "Activation link is invalid.")
+        messages.error(request, view_msg.get('error', settings.MESSAGE_RETRIEVAL_ERROR))
         
-    return redirect('home')
+    return redirect('login')
 
 # Send the activation email to the user upon successful signup submission
 def activate_email(request, user, to_email):
+    view_msg = {
+        'success' : f"Account creation success! Please check {to_email} for activation link.",
+        'error' : f"Problem sending activation email to {to_email}."
+    }
+    
     mail_subject = "Activate your climbing team account"
     message = render_to_string("email/activate_account_template.html", {
         'user': user.username,
@@ -41,13 +51,17 @@ def activate_email(request, user, to_email):
     })
     email = EmailMessage(mail_subject, message, to=[to_email])
     if email.send():
-        messages.success(request, f"Account creation success! Please check {to_email} for activation link.")
+        messages.success(request, view_msg.get('success', settings.MESSAGE_RETRIEVAL_ERROR))
         
     else:
-        messages.error(request, f"Problem sending activation email to {to_email}.")
+        messages.error(request, view_msg.get('error', settings.MESSAGE_RETRIEVAL_ERROR))
 
 # View for user login.
 def login_page(request):
+    view_msg = {
+        'success' : lambda username: f"{username} has been logged in successfully!",
+    }
+    
     if not request.user.is_authenticated:
         if request.method == 'POST':
             form = UserLoginForm(request, data=request.POST)
@@ -55,6 +69,7 @@ def login_page(request):
                 user = form.authenticate_user()
                 if user is not None:
                     login(request, user)
+                    messages.success(request, view_msg.get('success', settings.MESSAGE_RETRIEVAL_ERROR)(request.user.username))
                     return redirect('home')
             else:
                 error = list(form.errors.values())[0]
@@ -95,12 +110,3 @@ def signup(request):
         return render(request, 'login_templates/signup.html', {'form':form})
     else:
         return redirect('home')
-
-# View for user profile
-def profile(request, username):
-    user = User.objects.get(username=username)
-    return render(request, 'login_templates/profile.html', {'user': user})
-
-# View for user password change.
-def password_change(request, username):
-    return render(request, 'login_templates/password_change.html')

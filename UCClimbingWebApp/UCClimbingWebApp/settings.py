@@ -142,8 +142,6 @@ STATICFILES_DIRS = [
     os.path.join("home", "static")
 ]
 
-MEDIA_URL = 'media/'
-
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
@@ -159,7 +157,9 @@ if (os.environ.get('IS_ON_AWS', '0') == '1'):
     AWS_DEFAULT_ACL = 'public-read'
     AWS_QUERYSTRING_AUTH = False
 else:
-    MEDIA_ROOT = '/UCClimbingWebApp/media/'
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+    
+MEDIA_URL = '/media/'
     
 # Auth Settings
 LOGIN_URL = "login/"
@@ -167,3 +167,5 @@ LOGOUT_URL = "logout/"
 
 # Page Settings
 HOME_URL = 'home/'
+
+MESSAGE_RETRIEVAL_ERROR = 'Error: Unable to retrieve message'

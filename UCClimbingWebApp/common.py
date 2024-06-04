@@ -3,10 +3,10 @@ from django.contrib.auth.decorators import user_passes_test
 from functools import wraps
 from django.shortcuts import redirect
 from django.http import HttpResponse
+from PIL import Image
 
 def logout_required(redirect_to=None):
     def decorator(view_func):
-        print(type(view_func))
         @wraps(view_func)
         def _wrapper_view(request, *args, **kwargs):
             if request.user.is_authenticated:
@@ -15,3 +15,11 @@ def logout_required(redirect_to=None):
             return view_func(request, *args, **kwargs)
         return _wrapper_view
     return decorator
+
+def resize_image(image):
+    img = Image.open(image.path)
+    
+    if img.height > 300 or image.widgth > 300:
+        output_size = (300, 300)
+        img.thumbnail(output_size)
+        img.save(self.image.path)

@@ -17,5 +17,3 @@ class Article(models.Model):
         if not self.slug:
             self.slug = slugify(f"{self.title}-{str(self.author)}-{self.date}")
         return super().save(*args, **kwargs)
-    
-    

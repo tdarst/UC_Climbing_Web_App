@@ -1,8 +1,9 @@
 {% extends "base.html" %}
 {% block title %}
-<h1>Your Profile</h1>
+<h3>{{user.username}}'s profile</h3>
 {% endblock title %}
 {% block content %}
+<img class="rounded-circle account-img" src={{user.profile.image.url}}>
 <p>Username: {{user.username}}</p>
 <p>Name: {{user.first_name}} {{user.last_name}}<p>
 <p>Email: {{user.email}}<p>
