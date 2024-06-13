@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}
+<h3>{{user.username}}'s profile</h3>
+{% endblock title %}
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <img class="rounded-circle account-img" src={{user.profile.image.url}}>
+    <div class="col-md-6">
+        <label for="image" class="form-label">Image:</label>
+        {{ profile_form.image }}
+    </div>
+    <div class="col-md-6">
+        <label for="username" class="form-label">Username:</label>
+        {{ user_form.username }}
+    </div>
+    <div class="col-md-6">
+        <label for="email" class="form-label">Email:</label>
+        {{ user_form.email }}
+    </div>
+    <button type="submit">Save Changes</button>
+</form>
+{% endblock content %}

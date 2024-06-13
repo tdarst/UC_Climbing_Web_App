@@ -1,4 +1,6 @@
 manage.py
+migrations
+static
 
 # Docker
 .dockerignore
@@ -14,7 +16,8 @@ scripts
 *.pyc
 __pycache__
 db.sqlite3
-media
+profile_pics
+default.jpg
 
 # AWS
 aws_commands.txt

@@ -2,6 +2,7 @@ from django import forms
 from authuser.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib.auth import login, authenticate
+from django.conf import settings
 
 class CustomUserCreationForm(UserCreationForm):
     username = forms.CharField(max_length=16)
@@ -21,7 +22,27 @@ class CustomUserCreationForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class UserUpdateForm(forms.ModelForm):
+    username = forms.CharField(max_length=16)
+    email = forms.EmailField(required=True)
     
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+        
+    def save(self, commit=True, email_changed=False):
+        user = super().save(commit=False)
+        username = self.cleaned_data.get('username')
+        email = self.cleaned_data.get('email')
+        if email_changed:
+            user.is_active = False
+        if commit:
+            user.save()
+            
+        return user, email_changed
+        
+        
 class UserLoginForm(AuthenticationForm):
     username = forms.CharField(max_length=16)
     password = forms.CharField(widget=forms.PasswordInput, max_length=150)

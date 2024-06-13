@@ -37,7 +37,7 @@ def activate(request, uidb64, token):
 # Send the activation email to the user upon successful signup submission
 def activate_email(request, user, to_email):
     view_msg = {
-        'success' : f"Account creation success! Please check {to_email} for activation link.",
+        'success' : f"Please check {to_email} for activation link.",
         'error' : f"Problem sending activation email to {to_email}."
     }
     
