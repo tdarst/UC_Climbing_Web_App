@@ -33,6 +33,8 @@ let rightPressed = false;
 
 let score = 0;
 
+let score_sent = false;
+
 const rocks = [];
 
 const imgClimber = new Image();
@@ -81,8 +83,8 @@ function drawGame() {
         count += 1;
     }
     else {
-        requestAnimationFrame(drawGame);
         updateScoreInServer(score);
+        requestAnimationFrame(drawGame);
         showGameOverScreen();
     }
 }
@@ -324,9 +326,11 @@ function getRandomInt(min, max) {
 function updateScoreInServer(score) {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
+    if (score_sent) return;
+
     $.ajax({
         type: 'POST',
-        url: "/update_score",  // Ensure this URL is correct
+        url: {% url "update_score" %},
         data: {
             "score": score,
             "csrfmiddlewaretoken": csrfToken
@@ -334,7 +338,7 @@ function updateScoreInServer(score) {
         dataType: "json",
         success: function(data) {
             alert("Successfully delivered score");
-            score_sent = true;  // Update the score_sent flag
+            score_sent = true;
         },
         error: function(jqXHR, textStatus, errorThrown) {
             alert("Failed to deliver score: " + textStatus + " - " + errorThrown);
