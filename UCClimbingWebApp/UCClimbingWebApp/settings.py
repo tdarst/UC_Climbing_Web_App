@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'authuser',
     'news',
     'login',
+    'RockFall',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -139,7 +140,6 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [
-    os.path.join("home", "static"),
     os.path.join("media"),
 ]
 

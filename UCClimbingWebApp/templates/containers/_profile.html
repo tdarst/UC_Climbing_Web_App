@@ -13,7 +13,7 @@
                 <h5 class="card-title">{{user.first_name}} {{user.last_name}}'s Profile</h5>
                 <p class="card-text">Username: {{user.username}}</p>
                 <p class="card-text">Email: {{user.email}}</p>
-                <p class="card-text">Rockfall High Score: 0</p>
+                <p class="card-text">Rockfall High Score: {{user.profile.score}}</p>
                 <a href={% url "update_profile" request.user.username %} class="btn btn-primary">Update Information</a>
             </div>
         </div>

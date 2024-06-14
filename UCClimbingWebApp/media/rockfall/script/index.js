@@ -22,6 +22,8 @@ let moveSpeed = 2;
 let rockSpeed = 1;
 let rockwallSpeed = 0.5;
 
+const cursor = createCursor();
+
 count = 0
 
 let downPressed = false;
@@ -75,11 +77,13 @@ function drawGame() {
         drawClimber();
         drawRocks();
         drawPlayerInfo();
+        incrementScore();
         count += 1;
-        incrementScore(count);
     }
     else {
-        showGameOverScreen()
+        requestAnimationFrame(drawGame);
+        updateScoreInServer(score);
+        showGameOverScreen();
     }
 }
 
@@ -88,6 +92,21 @@ function showGameOverScreen() {
     clearScreen();
     drawGameOverText();
     drawCursor();
+    gameOverInputs();
+}
+
+function drawCursor() {
+    
+    if (cursor.cursorTop) {
+        cursor.x = 280;
+        cursor.y = 340;
+    }
+    else {
+        cursor.x = 210;
+        cursor.y = 390;
+    }
+    cursor.draw();
+    return cursor
 }
 
 // Draws the text to the game over screen
@@ -103,6 +122,38 @@ function drawGameOverText() {
     const scoreText = "Score: " + score;
     const scoreTextObj = createCenteredTextObject(scoreText, 30, 250);
     scoreTextObj.draw();
+
+    const playAgainText = "PLAY AGAIN"
+    const playAgainTextObj = createCenteredTextObject(playAgainText, 30, 350);
+    playAgainTextObj.draw();
+
+    const leaderBoardText = "VIEW LEADER BOARD"
+    const leaderBoardTextObj = createCenteredTextObject(leaderBoardText, 30, 400);
+    leaderBoardTextObj.draw();
+
+
+
+}
+
+function createCursor() {
+    const x_pos = 300;
+    const y_pos = 340;
+    const width = 15;
+    const height = 15;
+    const cursorTop = true;
+    
+    return {
+        x: x_pos,
+        y: y_pos,
+        width: width,
+        height: height,
+        cursorTop: cursorTop,
+        draw: function () {
+            context.fillStyle = "white";
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+
+    }
 }
 
 // Creates a text object that automatically centers itself based on length
@@ -125,7 +176,7 @@ function createCenteredTextObject(text, fontSize, y) {
     };
 }
 
-function incrementScore(count) {
+function incrementScore() {
     if (count % 50 === 0) {
         score += 5;
         if (score === 50) {
@@ -170,6 +221,15 @@ function inputs() {
     }
     if (leftPressed) {
         x -= moveSpeed;
+    }
+}
+
+function gameOverInputs() {
+    if (downPressed && cursor.cursorTop) {
+        cursor.cursorTop = false;
+    }
+    if (upPressed && !cursor.cursorTop) {
+        cursor.cursorTop = true;
     }
 }
 
@@ -259,4 +319,25 @@ function getRandomInt(min, max) {
     const minCeiled = Math.ceil(min);
     const maxFloored = Math.floor(max);
     return Math.floor(Math.random() * (maxFloored - minCeiled) + minCeiled);
+}
+
+function updateScoreInServer(score) {
+    const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    $.ajax({
+        type: 'POST',
+        url: "/update_score",  // Ensure this URL is correct
+        data: {
+            "score": score,
+            "csrfmiddlewaretoken": csrfToken
+        },
+        dataType: "json",
+        success: function(data) {
+            alert("Successfully delivered score");
+            score_sent = true;  // Update the score_sent flag
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+            alert("Failed to deliver score: " + textStatus + " - " + errorThrown);
+        }
+    });
 }

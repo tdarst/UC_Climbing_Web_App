@@ -33,6 +33,7 @@
     {% load static %}
     <H1> Climber Guy </H1>
     <canvas id="game_area" width="800" height="800"></canvas>
+    <input type="hidden" name="csrfmiddlewaretoken" value="{% csrf_token %}">
     <script>
         var gameEnded = false;
         var username = "{{user.username}}"
