@@ -2,7 +2,7 @@ from django.shortcuts import render
 from .models import sesh
 
 def show_sessions(request):
-    sessions = sesh.objects.get()
+    sessions = sesh.objects.all()
     context = {
         "sessions" : sessions
     }

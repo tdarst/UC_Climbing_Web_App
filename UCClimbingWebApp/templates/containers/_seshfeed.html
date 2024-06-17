@@ -1,0 +1,17 @@
+<style>
+    .flex-container-row {
+        display: flex;
+        flex-wrap: wrap; /* Allow items to wrap onto the next line */
+        gap: 10px;
+        padding: 10px;
+    }
+
+</style>
+
+<div class="flex-container-row">
+    {% for sesh in sessions %}
+        <div>
+            {% include "containers/_sesh.html" with sesh=sesh %}
+        </div>
+    {% endfor %}
+</div>

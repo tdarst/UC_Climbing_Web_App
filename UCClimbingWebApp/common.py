@@ -4,6 +4,10 @@ from functools import wraps
 from django.shortcuts import redirect
 from django.http import HttpResponse
 from PIL import Image
+from datetime import datetime
+
+def get_current_time():
+    return datetime.now().time()
 
 def logout_required(redirect_to=None):
     def decorator(view_func):

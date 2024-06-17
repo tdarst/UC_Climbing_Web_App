@@ -52,26 +52,31 @@
         .card-no-border {
             border: none;
         }
+
+        p {
+            margin: 0;
+        }
     </style>
 </head>
 
 <body>
-    {% for session in sessions %}
     <div class="container">
         <div class="card" style="width: 30rem; padding-bottom: 5px;">
             <!-- Header for the card -->
             <div class="card-header">
-                {{session.sesh_type}}, {{session.sesh_environ}}, Red River Gorge
+                {{sesh.sesh_type}}, {{sesh.sesh_environ}}, {{sesh.location}}
             </div>
             <!-- Poster information -->
             <div class="row">
                 <div class="card card-no-border mx-3 my-1" style="width: 25rem">
                     <div class="row top-card-grid-container">
                         <div class="pic">
-                            <img class="rounded-circle profile-image-scaled-down" src="{{user.profile.image.url}}" alt="Profile Picture">
+                            <img class="rounded-circle profile-image-scaled-down" src="{{sesh.user.profile.image.url}}" alt="Profile Picture">
                         </div>
                         <div class="user">
-                            <p class="font-bold">{{user.first_name}} {{user.last_name}}</p>
+                            <p class="font-bold">Session Date: {{sesh.date_going}}</p>
+                            <br>
+                            <p class="font-bold">{{sesh.user.first_name}} {{sesh.user.last_name}}</p>
                             <p>Lead Certified</p>
                         </div>
                     </div>
@@ -94,5 +99,4 @@
             </div>
         </div>
     </div>
-    {% endfor %}
 </body>
