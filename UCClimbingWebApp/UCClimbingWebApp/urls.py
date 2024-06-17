@@ -10,7 +10,7 @@ urlpatterns = [
     path('', include("login.urls")),
     path('', include("authuser.urls")),
     path('', include("RockFall.urls")),
-    path('', include("sesh.urls")),
+    path('', include("user_posts.urls")),
     path('admin/', admin.site.urls),
 ]
 

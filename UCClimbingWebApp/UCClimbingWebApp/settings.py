@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'news',
     'login',
     'RockFall',
-    'sesh',
+    'user_posts',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -179,4 +179,4 @@ LOGOUT_URL = "logout/"
 # Page Settings
 HOME_URL = 'home/'
 
-MESSAGE_RETRIEVAL_ERROR = 'Error: Unable to retrieve message'
+MESSAGE_RETRIEVAL_ERROR = lambda *args: 'Error: Unable to retrieve message'
