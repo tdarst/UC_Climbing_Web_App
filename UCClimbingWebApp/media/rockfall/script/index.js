@@ -5,7 +5,7 @@ context.font = "20px Arial";
 let x = 100;
 let y = 100;
 
-const CLIMBER_WIDTH = 50; 
+const CLIMBER_WIDTH = 50;
 const CLIMBER_HEIGHT = 100;
 
 const ROCK_WIDTH = 25;
@@ -38,31 +38,27 @@ let score_sent = false;
 const rocks = [];
 
 const imgClimber = new Image();
-imgClimber.onload = function () {
-    drawGame();
-}
+const imgRock = new Image();
+const imgRockwall = new Image();
+
+let imagesLoaded = 0;
 
 imgClimber.src = imageClimber;
-
-const imgRock = new Image();
-imgRock.onload = function () {
-    drawGame();
-}
-
 imgRock.src = imageRock;
-
-const imgRockwall = new Image();
-imgRockwall.onload = function () {
-    drawGame();
-}
-
 imgRockwall.src = imageRockwall;
+
+imgClimber.onload = imgRock.onload = imgRockwall.onload = function () {
+    imagesLoaded++;
+    if (imagesLoaded === 3) {
+        requestAnimationFrame(drawGame);
+    }
+};
 
 const rockwall = {
     x: 0,
     y: -800,
     flip: false
-}
+};
 
 function drawGame() {
     if (!gameEnded){
@@ -83,13 +79,14 @@ function drawGame() {
         count += 1;
     }
     else {
-        updateScoreInServer(score);
-        requestAnimationFrame(drawGame);
+        if (!score_sent) {
+            updateScoreInServer(score);
+            score_sent = true;
+        }
         showGameOverScreen();
     }
 }
 
-// Game Over Screen to show the player what score they have and allow them to play again
 function showGameOverScreen() {
     clearScreen();
     drawGameOverText();
@@ -98,7 +95,6 @@ function showGameOverScreen() {
 }
 
 function drawCursor() {
-    
     if (cursor.cursorTop) {
         cursor.x = 280;
         cursor.y = 340;
@@ -108,10 +104,9 @@ function drawCursor() {
         cursor.y = 390;
     }
     cursor.draw();
-    return cursor
+    return cursor;
 }
 
-// Draws the text to the game over screen
 function drawGameOverText() {
     const gameOverText = "GAME OVER";
     const gameOverTextObj = createCenteredTextObject(gameOverText, 60, 100);
@@ -125,16 +120,13 @@ function drawGameOverText() {
     const scoreTextObj = createCenteredTextObject(scoreText, 30, 250);
     scoreTextObj.draw();
 
-    const playAgainText = "PLAY AGAIN"
+    const playAgainText = "PLAY AGAIN";
     const playAgainTextObj = createCenteredTextObject(playAgainText, 30, 350);
     playAgainTextObj.draw();
 
-    const leaderBoardText = "VIEW LEADER BOARD"
+    const leaderBoardText = "VIEW LEADER BOARD";
     const leaderBoardTextObj = createCenteredTextObject(leaderBoardText, 30, 400);
     leaderBoardTextObj.draw();
-
-
-
 }
 
 function createCursor() {
@@ -154,11 +146,9 @@ function createCursor() {
             context.fillStyle = "white";
             context.fillRect(this.x, this.y, this.width, this.height);
         }
-
-    }
+    };
 }
 
-// Creates a text object that automatically centers itself based on length
 function createCenteredTextObject(text, fontSize, y) {
     const textWidth = context.measureText(text).width;
     const x_pos = (canvas.width/2) - (textWidth/2);
@@ -181,7 +171,7 @@ function createCenteredTextObject(text, fontSize, y) {
 function incrementScore() {
     if (count % 50 === 0) {
         score += 5;
-        if (score === 50) {
+        if (score === 100) {
             gameEnded = true;
         }
     }
@@ -285,7 +275,7 @@ function rockwallBoundaryCheck() {
 }
 
 document.body.addEventListener('keydown', keyDown);
-document.body.addEventListener('keyup', keyUp)
+document.body.addEventListener('keyup', keyUp);
 
 function keyDown(event) {
     if (event.keyCode == UP_KEY_CODE) {
@@ -326,19 +316,16 @@ function getRandomInt(min, max) {
 function updateScoreInServer(score) {
     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    if (score_sent) return;
-
     $.ajax({
         type: 'POST',
-        url: {% url "update_score" %},
+        url: "/update_score",
         data: {
-            "score": score,
-            "csrfmiddlewaretoken": csrfToken
+            score: score,
+            csrfmiddlewaretoken: csrfToken
         },
         dataType: "json",
         success: function(data) {
             alert("Successfully delivered score");
-            score_sent = true;
         },
         error: function(jqXHR, textStatus, errorThrown) {
             alert("Failed to deliver score: " + textStatus + " - " + errorThrown);
