@@ -8,6 +8,7 @@ class sesh(models.Model):
     date_going = models.DateField(blank=False)
     sesh_type = models.CharField(max_length=1000)
     sesh_environ = models.CharField(max_length=1000)
+    location = models.CharField(max_length=1000)
     
     joining = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='joining')
     maybe = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name='maybe')

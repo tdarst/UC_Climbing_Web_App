@@ -1,0 +1,98 @@
+<head>
+    <style>
+        .profile-image-scaled-down {
+            width: 100px;
+            height: 100px;
+        }
+
+        .top-card-grid-container {
+            display: grid;
+            grid-template-areas:
+                "pic  user user"
+                "desc desc desc";
+            grid-template-columns: auto 1fr;
+            gap: 0px;
+        }
+
+        .top-card-grid-container .pic {
+            grid-area: pic;
+        }
+
+        .top-card-grid-container .user {
+            grid-area: user;
+        }
+
+        .top-card-grid-container .desc {
+            grid-area: desc;
+        }
+
+        .bottom-row-grid-container {
+            display: grid;
+            grid-template-areas: "join blank maybe";
+            grid-template-columns: auto 1fr;
+            gap: 5px; /* Adjust the gap between the buttons as needed */
+        }
+
+        .bottom-row-grid-container .join {
+            grid-area: join;
+        }
+
+        .bottom-row-grid-container .blank {
+            grid-area: blank;
+        }
+
+        .bottom-row-grid-container .maybe {
+            grid-area: maybe;
+        }
+
+        .font-bold {
+            font-weight: bold;
+        }
+
+        .card-no-border {
+            border: none;
+        }
+    </style>
+</head>
+
+<body>
+    {% for session in sessions %}
+    <div class="container">
+        <div class="card" style="width: 30rem; padding-bottom: 5px;">
+            <!-- Header for the card -->
+            <div class="card-header">
+                {{session.sesh_type}}, {{session.sesh_environ}}, Red River Gorge
+            </div>
+            <!-- Poster information -->
+            <div class="row">
+                <div class="card card-no-border mx-3 my-1" style="width: 25rem">
+                    <div class="row top-card-grid-container">
+                        <div class="pic">
+                            <img class="rounded-circle profile-image-scaled-down" src="{{user.profile.image.url}}" alt="Profile Picture">
+                        </div>
+                        <div class="user">
+                            <p class="font-bold">{{user.first_name}} {{user.last_name}}</p>
+                            <p>Lead Certified</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Bottom of the card containing the interactive part -->
+            <hr>
+            <div class="row">
+                <div class="card mx-3 card-no-border" style="width: 29.4rem;">
+                    <div class="bottom-row-grid-container">
+                        <div class="join">
+                            <a href="#" class="btn btn-primary">Join</a>
+                        </div>
+                        <div class="blank"></div>
+                        <div class="maybe">
+                            <a href="#" class="btn btn-primary">Maybe</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</body>
