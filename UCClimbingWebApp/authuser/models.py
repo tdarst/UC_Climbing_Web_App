@@ -4,7 +4,10 @@ from django.contrib.auth.models import UserManager, AbstractBaseUser, Permission
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.core.files.storage import default_storage as storage
 from PIL import Image
+from io import BytesIO
+from django.core.files.base import ContentFile
 
 class CustomUserManager(UserManager):
     def _create_user(self, username, email, password, **extra_stuff):
@@ -73,9 +76,14 @@ class Profile(models.Model):
     
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        img = Image.open(self.image.path)
+        image_read = storage.open(self.image.name, "rb")
+        img = Image.open(image_read)
         
         if img.height > 300 or self.image.width > 300:
             output_size = (300, 300)
+            imageBuffer = BytesIO()
             img.thumbnail(output_size)
-            img.save(self.image.path)
+            
+            img.save(imageBuffer, img.format)
+            
+            self.image.save(self.image.name, ContentFile(imageBuffer.getvalue()))
