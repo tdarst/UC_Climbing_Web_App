@@ -69,6 +69,7 @@ def login_page(request):
                 user = form.authenticate_user()
                 if user is not None:
                     login(request, user)
+                    print(user.username)
                     messages.success(request, view_msg.get('success', settings.MESSAGE_RETRIEVAL_ERROR)(request.user.username))
                     return redirect('home')
             else:
@@ -96,7 +97,6 @@ def signup(request):
         if request.method == 'POST':
             form = CustomUserCreationForm(request.POST)
             if form.is_valid():
-                print(f"\\n{form.cleaned_data['username']}\\n")
                 user = form.save(commit=False)
                 user.is_active = False
                 user.save()

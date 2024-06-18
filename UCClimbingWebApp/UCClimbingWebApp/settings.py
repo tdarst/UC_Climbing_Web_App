@@ -149,9 +149,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = 'static/'
-STATICFILES_DIRS = [
-    os.path.join("media"),
-]
+# STATICFILES_DIRS = [
+#     os.path.join("static"),
+# ]
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -162,6 +163,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 if (os.environ.get('IS_ON_AWS', '0') == '1'):
+    # STATIC_URL = 'static/'
+    # STATICFILES_DIRS = [
+    #     os.path.join("static")
+    # ]
     DEFAULT_FILE_STORAGE = 'UCClimbingWebApp.s3_backends.MediaS3Storage'
     STATICFILES_STORAGE = 'UCClimbingWebApp.s3_backends.StaticS3Storage'
     AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
