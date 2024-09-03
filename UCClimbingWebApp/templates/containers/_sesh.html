@@ -28,7 +28,7 @@
 
         .bottom-row-grid-container {
             display: grid;
-            grid-template-areas: "join blank maybe";
+            grid-template-areas: "join joining maybeing maybe";
             grid-template-columns: auto 1fr;
             gap: 5px; /* Adjust the gap between the buttons as needed */
         }
@@ -37,8 +37,11 @@
             grid-area: join;
         }
 
-        .bottom-row-grid-container .blank {
-            grid-area: blank;
+        .bottom-row-grid-container .joining {
+            grid-area: joining;
+        }
+        .bottom-row-grid-container .maybeing {
+            grid-area: maybeing;
         }
 
         .bottom-row-grid-container .maybe {
@@ -90,7 +93,13 @@
                         <div class="join">
                             <a href="{% url "joining" sesh.slug %}" class="btn btn-primary">Join</a>
                         </div>
-                        <div class="blank"></div>
+                        <div class="joining">
+                            {% if sesh.joining_count > 1 %}
+                            <p> {{sesh.joining_count}} people joining </p>
+                            {% else %}
+                            <p> {{sesh.joining_count}} person joining </p>
+                            {% endif %}
+                        </div>
                         <div class="maybe">
                             <a href="#" class="btn btn-primary">Maybe</a>
                         </div>

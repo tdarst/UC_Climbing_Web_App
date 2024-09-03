@@ -2,11 +2,11 @@ from django.shortcuts import render
 from .models import Article
 
 
-def news_article(request, slug_url):
-    article = Article.objects.get(slug=slug_url)
+def news_article(request, slug):
+    article = Article.objects.get(slug=slug)
     context = {
         'article':article,
-        'slug':slug_url
+        'slug':slug
     }
     return render(request, 'news_templates/article.html', context)
 

@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from authuser.models import User, Profile
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
@@ -12,7 +12,9 @@ def rockfall(request):
         context = {
             'user': user
         }
-    return render(request, 'rockfall_templates/rockfall_template.html')
+        return render(request, 'rockfall_templates/rockfall_template.html')
+    else:
+        return redirect('login')
 
 @csrf_exempt
 def update_score(request):

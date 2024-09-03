@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}
-<h1>Sessions</h1>
+<h1>Sessions</h1> 
+<a href="{% url "post_sesh" %}" class="btn btn-primary">Create Sesh</a>
 {% endblock title %}
 {% block centered_content %}
 {% include "containers/_seshfeed.html" %}
