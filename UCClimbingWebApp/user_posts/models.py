@@ -26,6 +26,7 @@ class ClimbingSession(models.Model):
         return f"{self.user}_{self.date_posted}_{self.sesh_type}"
     
     def save(self, *args, **kwargs):
+        print(f"user - { self.user }")
         if not self.slug:
             self.slug = slugify(f"{self.user.username}-{self.date_posted}-{self.time_going}")
         return super().save(*args, **kwargs)
